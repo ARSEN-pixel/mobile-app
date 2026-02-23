@@ -78,6 +78,17 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="playground"
+        options={{
+          title: 'playground',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="color-palette" size={size} color={color} />
+          ),
+          // Hidden in production - only for dev
+          tabBarItemStyle: __DEV__ ? {} : { display: 'none' },
+        }}
+      />
     </Tabs>
   );
 }
