@@ -146,7 +146,7 @@ export default function SettingsScreen() {
   );
   
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
       
       <ScrollView
@@ -315,14 +315,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: Spacing.md,
-    paddingBottom: Spacing.xxl,
+    paddingHorizontal: Spacing.md,
+    paddingTop: Spacing.sm,
+    paddingBottom: 100,
   },
   header: {
     marginBottom: Spacing.lg,
   },
   screenTitle: {
-    ...Typography.displaySmall,
+    fontSize: 28,
+    fontWeight: '700',
   },
   profileCard: {
     marginBottom: Spacing.lg,
@@ -348,10 +350,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   profileName: {
-    ...Typography.headlineMedium,
+    fontSize: 18,
+    fontWeight: '600',
   },
   profileEmail: {
-    ...Typography.bodySmall,
+    fontSize: 13,
     marginTop: 2,
   },
   guestBadge: {
@@ -363,14 +366,16 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   guestBadgeText: {
-    ...Typography.bodySmall,
+    fontSize: 12,
     flex: 1,
   },
   sectionTitle: {
-    ...Typography.labelMedium,
+    fontSize: 12,
+    fontWeight: '600',
     marginBottom: Spacing.sm,
     marginLeft: Spacing.sm,
     textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   sectionCard: {
     marginBottom: Spacing.lg,
@@ -393,15 +398,16 @@ const styles = StyleSheet.create({
     marginLeft: Spacing.md,
   },
   settingTitle: {
-    ...Typography.bodyMedium,
+    fontSize: 15,
     fontWeight: '500',
   },
   settingSubtitle: {
-    ...Typography.bodySmall,
+    fontSize: 12,
     marginTop: 2,
   },
   themeLabel: {
-    ...Typography.labelMedium,
+    fontSize: 12,
+    fontWeight: '500',
     padding: Spacing.md,
     paddingBottom: Spacing.sm,
   },
@@ -419,18 +425,21 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   themeOptionText: {
-    ...Typography.labelSmall,
+    fontSize: 12,
+    fontWeight: '500',
     marginTop: Spacing.sm,
   },
   appInfo: {
     alignItems: 'center',
     marginTop: Spacing.lg,
+    marginBottom: Spacing.xxl,
   },
   appName: {
-    ...Typography.labelMedium,
+    fontSize: 13,
+    fontWeight: '500',
   },
   appCopyright: {
-    ...Typography.labelSmall,
+    fontSize: 11,
     marginTop: 4,
   },
 });

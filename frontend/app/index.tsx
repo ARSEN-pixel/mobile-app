@@ -50,7 +50,6 @@ export default function DashboardScreen() {
   
   const initializeGuestUser = async () => {
     try {
-      // Create guest user
       const response = await axios.post(`${BACKEND_URL}/api/users`, {
         provider: 'guest',
         display_name: 'Invitat',
@@ -60,7 +59,6 @@ export default function DashboardScreen() {
       return response.data;
     } catch (error) {
       console.error('Error creating guest user:', error);
-      // Create a local guest user
       const guestUser = {
         id: `guest_${Date.now()}`,
         display_name: 'Invitat',
@@ -86,16 +84,13 @@ export default function DashboardScreen() {
       const userId = currentUser?.id || user?.id;
       if (!userId) return;
       
-      // Fetch categories
       const catResponse = await axios.get(`${BACKEND_URL}/api/categories?user_id=${userId}`);
       setCategories(catResponse.data);
       
-      // Fetch dashboard data
       const dashResponse = await axios.get(`${BACKEND_URL}/api/dashboard?user_id=${userId}`);
       setDashboardData(dashResponse.data);
       setRecentTransactions(dashResponse.data.recent_transactions || []);
       
-      // Fetch all expenses for the store
       const expResponse = await axios.get(`${BACKEND_URL}/api/expenses?user_id=${userId}`);
       setExpenses(expResponse.data);
       
@@ -146,21 +141,23 @@ export default function DashboardScreen() {
   
   if (loading) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
         <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
-        <View style={styles.header}>
-          <View>
-            <Text style={[styles.greeting, { color: colors.textSecondary }]}>{greeting}</Text>
-            <Text style={[styles.name, { color: colors.text }]}>{user?.display_name || 'Invitat'}</Text>
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <View>
+              <Text style={[styles.greeting, { color: colors.textSecondary }]}>{greeting}</Text>
+              <Text style={[styles.name, { color: colors.text }]}>{user?.display_name || 'Invitat'}</Text>
+            </View>
           </View>
+          <SkeletonList count={5} />
         </View>
-        <SkeletonList count={5} />
       </SafeAreaView>
     );
   }
   
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
       
       <ScrollView
@@ -199,7 +196,6 @@ export default function DashboardScreen() {
             {t.dashboard.thisMonth} • {format(currentDate, 'MMMM yyyy', { locale: ro })}
           </Text>
           
-          {/* Budget Progress */}
           {dashboardData?.budget_total > 0 && (
             <View style={styles.budgetSection}>
               <View style={styles.budgetHeader}>
@@ -324,7 +320,7 @@ export default function DashboardScreen() {
         
         {/* Category Summary */}
         {dashboardData?.category_totals?.length > 0 && (
-          <View style={[styles.section, { marginBottom: 32 }]}>
+          <View style={[styles.section, { marginBottom: 100 }]}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
               Categorii luna aceasta
             </Text>
@@ -383,11 +379,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  content: {
+    flex: 1,
+    paddingHorizontal: Spacing.md,
+  },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    padding: Spacing.md,
+    paddingHorizontal: Spacing.md,
+    paddingTop: Spacing.sm,
+    paddingBottom: 100,
   },
   header: {
     flexDirection: 'row',
@@ -421,7 +423,10 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.xs,
   },
   totalAmount: {
-    ...Typography.displayLarge,
+    fontSize: 32,
+    fontWeight: '700',
+    lineHeight: 40,
+    letterSpacing: -0.5,
     marginBottom: Spacing.xs,
   },
   cardSubtext: {

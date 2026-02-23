@@ -52,7 +52,6 @@ export default function AddExpenseScreen() {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [showDateModal, setShowDateModal] = useState(false);
   
-  // Load expense data if editing
   useEffect(() => {
     if (isEditing && params.expenseId) {
       const expense = expenses.find(e => e.id === params.expenseId);
@@ -69,7 +68,6 @@ export default function AddExpenseScreen() {
     }
   }, [params.expenseId, isEditing]);
   
-  // Set first category as default if none selected
   useEffect(() => {
     if (!selectedCategoryId && categories.length > 0 && !preselectedCategoryId) {
       setSelectedCategoryId(categories[0].id);
@@ -77,7 +75,6 @@ export default function AddExpenseScreen() {
   }, [categories, selectedCategoryId, preselectedCategoryId]);
   
   const handleAmountChange = (text: string) => {
-    // Allow only numbers and one decimal point
     const cleaned = text.replace(/[^0-9.]/g, '');
     const parts = cleaned.split('.');
     if (parts.length > 2) return;
@@ -166,11 +163,10 @@ export default function AddExpenseScreen() {
   };
   
   const selectedCategory = categories.find(c => c.id === selectedCategoryId);
-  
   const quickAmounts = [10, 25, 50, 100, 200, 500];
   
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
       
       {/* Header */}
@@ -512,17 +508,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.md,
-    borderBottomWidth: 1,
+    paddingVertical: Spacing.sm,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   headerButton: {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTitle: {
-    ...Typography.headlineMedium,
+    fontSize: 17,
+    fontWeight: '600',
   },
   keyboardView: {
     flex: 1,
@@ -531,14 +528,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: Spacing.md,
-    paddingBottom: Spacing.xxl,
+    paddingHorizontal: Spacing.md,
+    paddingTop: Spacing.md,
+    paddingBottom: 100,
   },
   amountCard: {
     marginBottom: Spacing.md,
   },
   label: {
-    ...Typography.labelMedium,
+    fontSize: 12,
+    fontWeight: '500',
     marginBottom: Spacing.sm,
   },
   amountRow: {
@@ -546,7 +545,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   currencySymbol: {
-    ...Typography.displaySmall,
+    fontSize: 24,
+    fontWeight: '600',
     marginRight: Spacing.sm,
   },
   amountInput: {
@@ -567,7 +567,8 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
   },
   quickAmountText: {
-    ...Typography.labelMedium,
+    fontSize: 14,
+    fontWeight: '500',
   },
   inputCard: {
     marginBottom: Spacing.md,
@@ -576,7 +577,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: BorderRadius.md,
     padding: Spacing.md,
-    ...Typography.bodyMedium,
+    fontSize: 14,
   },
   notesInput: {
     minHeight: 80,
@@ -595,11 +596,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   selectedText: {
-    ...Typography.bodyMedium,
+    fontSize: 14,
     marginLeft: Spacing.sm,
   },
   placeholderText: {
-    ...Typography.bodyMedium,
+    fontSize: 14,
   },
   dateDisplay: {
     flexDirection: 'row',
@@ -620,7 +621,8 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   paymentMethodText: {
-    ...Typography.labelMedium,
+    fontSize: 14,
+    fontWeight: '500',
   },
   toggleRow: {
     flexDirection: 'row',
@@ -633,7 +635,7 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   toggleText: {
-    ...Typography.bodyMedium,
+    fontSize: 14,
   },
   toggle: {
     width: 48,
@@ -669,10 +671,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: Spacing.md,
-    borderBottomWidth: 1,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   modalTitle: {
-    ...Typography.headlineMedium,
+    fontSize: 17,
+    fontWeight: '600',
   },
   categoryList: {
     padding: Spacing.md,
@@ -685,7 +688,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.sm,
   },
   categoryItemText: {
-    ...Typography.bodyMedium,
+    fontSize: 14,
     flex: 1,
     marginLeft: Spacing.md,
   },
@@ -697,12 +700,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: Spacing.md,
-    borderBottomWidth: 1,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   dateOptionText: {
-    ...Typography.bodyMedium,
+    fontSize: 14,
   },
   dateOptionSubtext: {
-    ...Typography.bodySmall,
+    fontSize: 12,
   },
 });

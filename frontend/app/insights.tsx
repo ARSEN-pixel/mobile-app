@@ -35,7 +35,7 @@ export default function InsightsScreen() {
   
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [selectedMonths, setSelectedMonths] = useState(3); // Last 3 months
+  const [selectedMonths, setSelectedMonths] = useState(3);
   const [insightData, setInsightData] = useState<InsightData | null>(null);
   const [activeTab, setActiveTab] = useState<'charts' | 'table'>('charts');
   
@@ -98,7 +98,6 @@ export default function InsightsScreen() {
     }
   };
   
-  // Prepare chart data
   const barChartData = useMemo(() => {
     if (!insightData?.monthly_trend) return [];
     return insightData.monthly_trend.map(item => ({
@@ -152,7 +151,7 @@ export default function InsightsScreen() {
           </View>
         )}
       </View>
-      <Text style={[styles.kpiValue, { color: colors.text }]}>{value}</Text>
+      <Text style={[styles.kpiValue, { color: colors.text }]} numberOfLines={1}>{value}</Text>
       <Text style={[styles.kpiTitle, { color: colors.textSecondary }]}>{title}</Text>
       {subtitle && (
         <Text style={[styles.kpiSubtitle, { color: colors.textTertiary }]}>{subtitle}</Text>
@@ -162,15 +161,17 @@ export default function InsightsScreen() {
   
   if (loading) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
         <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
-        <View style={styles.header}>
-          <Text style={[styles.screenTitle, { color: colors.text }]}>{t.insights.title}</Text>
-        </View>
-        <View style={styles.loadingContainer}>
-          <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
-            {t.common.loading}
-          </Text>
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <Text style={[styles.screenTitle, { color: colors.text }]}>{t.insights.title}</Text>
+          </View>
+          <View style={styles.loadingContainer}>
+            <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
+              {t.common.loading}
+            </Text>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -178,16 +179,18 @@ export default function InsightsScreen() {
   
   if (!insightData || insightData.total_spent === 0) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
         <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
-        <View style={styles.header}>
-          <Text style={[styles.screenTitle, { color: colors.text }]}>{t.insights.title}</Text>
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <Text style={[styles.screenTitle, { color: colors.text }]}>{t.insights.title}</Text>
+          </View>
+          <EmptyState
+            icon="bar-chart-outline"
+            title="Nicio analiză disponibilă"
+            description="Adaugă cheltuieli pentru a vedea statisticile"
+          />
         </View>
-        <EmptyState
-          icon="bar-chart-outline"
-          title="Nicio analiză disponibilă"
-          description="Adaugă cheltuieli pentru a vedea statisticile"
-        />
       </SafeAreaView>
     );
   }
@@ -195,7 +198,7 @@ export default function InsightsScreen() {
   const biggestCategory = getCategoryById(insightData.biggest_category.category_id);
   
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
       
       <ScrollView
@@ -326,7 +329,6 @@ export default function InsightsScreen() {
         
         {activeTab === 'charts' ? (
           <>
-            {/* Monthly Trend Chart */}
             {barChartData.length > 0 && (
               <Card style={styles.chartCard}>
                 <Text style={[styles.chartTitle, { color: colors.text }]}>
@@ -351,7 +353,6 @@ export default function InsightsScreen() {
               </Card>
             )}
             
-            {/* Category Breakdown Pie Chart */}
             {pieChartData.length > 0 && (
               <Card style={styles.chartCard}>
                 <Text style={[styles.chartTitle, { color: colors.text }]}>
@@ -361,13 +362,10 @@ export default function InsightsScreen() {
                   <PieChart
                     data={pieChartData}
                     donut
-                    radius={100}
-                    innerRadius={60}
+                    radius={80}
+                    innerRadius={50}
                     centerLabelComponent={() => (
                       <View style={styles.pieCenter}>
-                        <Text style={[styles.pieCenterValue, { color: colors.text }]}>
-                          {formatCurrency(insightData.total_spent)}
-                        </Text>
                         <Text style={[styles.pieCenterLabel, { color: colors.textSecondary }]}>
                           Total
                         </Text>
@@ -392,7 +390,6 @@ export default function InsightsScreen() {
             )}
           </>
         ) : (
-          // Table View
           <Card style={styles.tableCard}>
             <Text style={[styles.chartTitle, { color: colors.text }]}>
               {t.insights.categoryTable}
@@ -416,7 +413,7 @@ export default function InsightsScreen() {
                   style={[
                     styles.tableRow,
                     index !== insightData.category_breakdown.length - 1 && {
-                      borderBottomWidth: 1,
+                      borderBottomWidth: StyleSheet.hairlineWidth,
                       borderBottomColor: colors.borderLight,
                     },
                   ]}
@@ -453,11 +450,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  content: {
+    flex: 1,
+    paddingHorizontal: Spacing.md,
+  },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    padding: Spacing.md,
+    paddingHorizontal: Spacing.md,
+    paddingTop: Spacing.sm,
+    paddingBottom: 100,
   },
   header: {
     flexDirection: 'row',
@@ -466,7 +469,8 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
   },
   screenTitle: {
-    ...Typography.displaySmall,
+    fontSize: 28,
+    fontWeight: '700',
   },
   exportButton: {
     width: 40,
@@ -488,7 +492,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   periodButtonText: {
-    ...Typography.labelMedium,
+    fontSize: 12,
+    fontWeight: '500',
   },
   kpiGrid: {
     flexDirection: 'row',
@@ -520,18 +525,20 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   trendText: {
-    ...Typography.labelSmall,
-    fontWeight: '600',
+    fontSize: 10,
+    fontWeight: '500',
   },
   kpiValue: {
-    ...Typography.headlineMedium,
+    fontSize: 18,
+    fontWeight: '600',
     marginBottom: 2,
   },
   kpiTitle: {
-    ...Typography.labelSmall,
+    fontSize: 11,
+    fontWeight: '500',
   },
   kpiSubtitle: {
-    ...Typography.labelSmall,
+    fontSize: 10,
     marginTop: 2,
   },
   insightCard: {
@@ -543,7 +550,7 @@ const styles = StyleSheet.create({
     gap: Spacing.md,
   },
   insightText: {
-    ...Typography.bodyMedium,
+    fontSize: 14,
     flex: 1,
   },
   tabSelector: {
@@ -559,13 +566,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tabText: {
-    ...Typography.labelMedium,
+    fontSize: 14,
+    fontWeight: '500',
   },
   chartCard: {
     marginBottom: Spacing.md,
   },
   chartTitle: {
-    ...Typography.headlineSmall,
+    fontSize: 16,
+    fontWeight: '600',
     marginBottom: Spacing.md,
   },
   chartContainer: {
@@ -580,12 +589,8 @@ const styles = StyleSheet.create({
   pieCenter: {
     alignItems: 'center',
   },
-  pieCenterValue: {
-    ...Typography.labelLarge,
-    fontWeight: '700',
-  },
   pieCenterLabel: {
-    ...Typography.labelSmall,
+    fontSize: 11,
   },
   pieLegend: {
     flex: 1,
@@ -603,11 +608,11 @@ const styles = StyleSheet.create({
     marginRight: Spacing.sm,
   },
   legendText: {
-    ...Typography.labelSmall,
+    fontSize: 12,
     flex: 1,
   },
   legendValue: {
-    ...Typography.labelSmall,
+    fontSize: 12,
     fontWeight: '600',
   },
   tableCard: {
@@ -620,7 +625,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.sm,
   },
   tableHeaderText: {
-    ...Typography.labelSmall,
+    fontSize: 11,
     fontWeight: '600',
   },
   tableRow: {
@@ -630,7 +635,7 @@ const styles = StyleSheet.create({
   },
   tableCell: {},
   tableCellText: {
-    ...Typography.bodySmall,
+    fontSize: 12,
   },
   loadingContainer: {
     flex: 1,
@@ -638,9 +643,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   loadingText: {
-    ...Typography.bodyMedium,
+    fontSize: 14,
   },
   bottomSpacing: {
-    height: Spacing.xxl,
+    height: 100,
   },
 });
