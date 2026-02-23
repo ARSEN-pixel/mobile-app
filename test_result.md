@@ -111,11 +111,14 @@ backend:
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "User CRUD endpoints implemented with guest mode support. Tested via curl - creates user and default categories automatically."
+      - working: true
+        agent: "testing"
+        comment: "✅ ALL USER ENDPOINTS PASSED: POST /users (guest creation), GET /users/{user_id}, PUT /users/{user_id}, GET /users/{user_id}/export, DELETE /users/{user_id}. Guest mode works correctly, creates default categories, user data export includes all related data."
 
   - task: "Categories API"
     implemented: true
