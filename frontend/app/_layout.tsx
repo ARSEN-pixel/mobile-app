@@ -3,7 +3,7 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import { useTheme } from '../src/hooks/useTheme';
 import { t } from '../src/constants/translations';
 
@@ -17,55 +17,66 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: colors.tabBar,
           borderTopColor: colors.border,
-          borderTopWidth: 1,
-          height: Platform.OS === 'ios' ? 88 : 64,
-          paddingTop: 8,
-          paddingBottom: Platform.OS === 'ios' ? 28 : 8,
+          borderTopWidth: StyleSheet.hairlineWidth,
+          height: Platform.OS === 'ios' ? 85 : 60,
+          paddingBottom: Platform.OS === 'ios' ? 25 : 5,
+          paddingTop: 5,
         },
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.tabBarInactive,
         tabBarLabelStyle: {
-          fontSize: 11,
+          fontSize: 10,
           fontWeight: '500',
+          marginTop: 2,
+        },
+        tabBarIconStyle: {
+          marginTop: 2,
         },
       }}
     >
+      {/* Left side tabs */}
       <Tabs.Screen
         name="index"
         options={{
           title: t.nav.dashboard,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "home" : "home-outline"} size={22} color={color} />
           ),
-        }}
-      />
-      <Tabs.Screen
-        name="add"
-        options={{
-          title: t.nav.add,
-          tabBarIcon: ({ color, size }) => (
-            <View style={[styles.addButton, { backgroundColor: colors.primary }]}>
-              <Ionicons name="add" size={28} color="#FFFFFF" />
-            </View>
-          ),
-          tabBarLabel: () => null,
         }}
       />
       <Tabs.Screen
         name="transactions"
         options={{
           title: t.nav.transactions,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="list" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "receipt" : "receipt-outline"} size={22} color={color} />
           ),
         }}
       />
+      
+      {/* Center Add Button */}
+      <Tabs.Screen
+        name="add"
+        options={{
+          title: '',
+          tabBarIcon: () => (
+            <View style={[styles.addButtonContainer]}>
+              <View style={[styles.addButton, { backgroundColor: colors.primary }]}>
+                <Ionicons name="add" size={28} color="#FFFFFF" />
+              </View>
+            </View>
+          ),
+          tabBarLabel: () => null,
+        }}
+      />
+      
+      {/* Right side tabs */}
       <Tabs.Screen
         name="insights"
         options={{
           title: t.nav.insights,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="stats-chart" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "pie-chart" : "pie-chart-outline"} size={22} color={color} />
           ),
         }}
       />
@@ -73,20 +84,17 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: t.nav.settings,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="cog" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "settings" : "settings-outline"} size={22} color={color} />
           ),
         }}
       />
+      
+      {/* Hidden playground - accessible via URL only */}
       <Tabs.Screen
         name="playground"
         options={{
-          title: 'playground',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="color-palette" size={size} color={color} />
-          ),
-          // Hidden in production - only for dev
-          tabBarItemStyle: __DEV__ ? {} : { display: 'none' },
+          href: null, // Hide from tab bar completely
         }}
       />
     </Tabs>
@@ -94,16 +102,21 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
-  addButton: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+  addButtonContainer: {
+    position: 'absolute',
+    top: -20,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
-    shadowColor: '#000',
+  },
+  addButton: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#6366F1',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
   },
