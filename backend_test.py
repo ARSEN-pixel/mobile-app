@@ -12,8 +12,7 @@ from typing import Dict, Any, List
 import sys
 
 # Backend URL from frontend environment
-BACKEND_URL = "https://fintech-track-app.preview.emergentagent.com/api"
-
+BACKEND_URL = "http://127.0.0.1:8000/api"
 class BackendTester:
     def __init__(self):
         self.base_url = BACKEND_URL
